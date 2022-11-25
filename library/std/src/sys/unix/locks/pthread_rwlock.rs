@@ -66,6 +66,7 @@ impl Drop for AllocatedRwLock {
 
 impl RwLock {
     #[inline]
+    #[rustc_const_stable(feature = "const_locks", since = "1.63.0")]
     pub const fn new() -> RwLock {
         RwLock { inner: LazyBox::new() }
     }

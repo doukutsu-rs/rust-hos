@@ -11,7 +11,9 @@
 #![allow(deprecated)]
 
 use crate::os::raw::c_long;
-use crate::os::unix::raw::{gid_t, uid_t};
+// use crate::os::unix::raw::{gid_t, uid_t};
+pub type gid_t = libc::gid_t;
+pub type uid_t = libc::uid_t;
 
 #[stable(feature = "pthread_t", since = "1.8.0")]
 pub type pthread_t = libc::pthread_t;

@@ -18,6 +18,8 @@ pub mod env;
 pub mod fd;
 pub mod fs;
 pub mod futex;
+#[cfg(target_os = "horizon")]
+mod horizon;
 pub mod io;
 #[cfg(any(target_os = "linux", target_os = "android"))]
 pub mod kernel_copy;
@@ -25,10 +27,12 @@ pub mod kernel_copy;
 mod l4re;
 pub mod locks;
 pub mod memchr;
-#[cfg(not(target_os = "l4re"))]
+#[cfg(not(any(target_os = "l4re", target_os = "horizon")))]
 pub mod net;
 #[cfg(target_os = "l4re")]
 pub use self::l4re::net;
+#[cfg(target_os = "horizon")]
+pub use self::horizon::net;
 pub mod os;
 pub mod os_str;
 pub mod path;

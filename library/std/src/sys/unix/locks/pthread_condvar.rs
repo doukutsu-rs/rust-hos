@@ -85,6 +85,7 @@ impl Drop for AllocatedCondvar {
 }
 
 impl Condvar {
+    #[rustc_const_stable(feature = "const_locks", since = "1.63.0")]
     pub const fn new() -> Condvar {
         Condvar { inner: LazyBox::new(), mutex: AtomicPtr::new(ptr::null_mut()) }
     }

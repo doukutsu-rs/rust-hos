@@ -20,7 +20,8 @@ pub fn hashmap_random_keys() -> (u64, u64) {
     not(target_os = "netbsd"),
     not(target_os = "fuchsia"),
     not(target_os = "redox"),
-    not(target_os = "vxworks")
+    not(target_os = "vxworks"),
+    not(target_os = "horizon")
 ))]
 mod imp {
     use crate::fs::File;
@@ -296,6 +297,36 @@ mod imp {
         };
         if ret < 0 {
             panic!("couldn't generate random bytes: {}", io::Error::last_os_error());
+        }
+    }
+}
+
+#[cfg(target_os = "horizon")]
+mod imp {
+    use crate::sys::os::errno;
+
+    pub fn fill_bytes(v: &mut [u8]) {
+        // TODO: move this out and use an abstraction for SVCs
+        fn get_rand_u64() -> u64 {
+            use crate::arch::asm;
+
+            let rc: u64;
+            let rand: u64;
+            unsafe {
+                // GetInfo(x1 = RandomEntropy)
+                asm!("svc #0x29", out("x0") rc, inout("x1") (11u64) => rand, options(nomem, nostack));
+            }
+            rand
+        }
+
+        // fill the buffer with random u64s
+        for s in v.chunks_mut(8) {
+            let rand = get_rand_u64();
+            if s.len() == 8 {
+                s.copy_from_slice(&rand.to_ne_bytes());
+            } else {
+                s.copy_from_slice(&rand.to_ne_bytes()[..s.len()]);
+            }
         }
     }
 }
