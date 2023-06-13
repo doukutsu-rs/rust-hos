@@ -16,7 +16,7 @@ panic_unwind = { path = "../panic_unwind", optional = true }
 panic_abort = { path = "../panic_abort" }
 core = { path = "../core" }
 #libc = { version = "0.2.135", default-features = false, features = ['rustc-dep-of-std'] }
-libc = { path = "/home/alula/workspace/doukutsu-rs/3rdparty/libc", default-features = false, features = ['rustc-dep-of-std'] }
+libc = { git = "https://github.com/doukutsu-rs/libc-hos.git", rev = "54f418e96517cd82d0e02629b25ff34587d1313a", default-features = false, features = ['rustc-dep-of-std'] }
 compiler_builtins = { version = "0.1.82" }
 profiler_builtins = { path = "../profiler_builtins", optional = true }
 unwind = { path = "../unwind" }
