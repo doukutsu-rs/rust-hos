@@ -308,15 +308,13 @@ mod imp {
     pub fn fill_bytes(v: &mut [u8]) {
         // TODO: move this out and use an abstraction for SVCs
         fn get_rand_u64() -> u64 {
-            use crate::arch::asm;
-
-            let rc: u64;
-            let rand: u64;
             unsafe {
-                // GetInfo(x1 = RandomEntropy)
-                asm!("svc #0x29", out("x0") rc, inout("x1") (11u64) => rand, options(nomem, nostack));
+                static mut rand: u64 = 0x9E3779B97f4A7C15;
+                rand ^= rand << 13;
+                rand ^= rand >> 7;
+                rand ^= rand << 17;
+                rand
             }
-            rand
         }
 
         // fill the buffer with random u64s

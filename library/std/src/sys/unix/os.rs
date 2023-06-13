@@ -574,9 +574,14 @@ pub fn unsetenv(n: &OsStr) -> io::Result<()> {
     })
 }
 
-#[cfg(not(target_os = "espidf"))]
+#[cfg(not(any(target_os = "espidf", target_os = "horizon")))]
 pub fn page_size() -> usize {
     unsafe { libc::sysconf(libc::_SC_PAGESIZE) as usize }
+}
+
+#[cfg(target_os = "horizon")]
+pub fn page_size() -> usize {
+    0x1000
 }
 
 pub fn temp_dir() -> PathBuf {
